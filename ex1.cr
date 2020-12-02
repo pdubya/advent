@@ -1,25 +1,16 @@
 
-c = [] of Int64
-File.each_line("input1.txt")  { |x| c << x.to_i64 }
-
-target = 2020
-done = false
-
-until c.empty?
-    r = c.shift
-    d = c.clone
-    until d.empty?
-        v = d.min
-        u = target - v - r
-        if u.in? d
-            puts v*u*r
-            done = true
-            break
-        end
-        d.select! { |x| x > v & x < u }
-        puts "\t#{ d.size }"
+target: Int64 = 2020
+terms = 3
+c = (1...terms).map { {} of Int64 => Int64 }
+File.each_line("input1.txt")  do |x|
+    q = x.to_i64
+    if q.in? c.first.keys
+        puts q*c.first[q]
+        break
     end
-    break if done
-    puts "next iter"
+    c[1..].each_with_index do |y, i|
+        y.each { |k, v| c[i][k - q] = v*q unless q > k }
+    end
+    c.last[target - q] = q
 end
 
