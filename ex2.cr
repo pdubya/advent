@@ -4,7 +4,7 @@ def rule1_valid?(p : String, c : Char, min_count : Int32, max_count : Int32)
 end
 
 def rule2_valid?(p : String, c : Char, offset1 : Int32, offset2 : Int32)
-    1 == [offset1, offset2].count { |q| p[q] == c }
+    1 == [offset1, offset2].map{ |q| p[q] }.count(c)
 end
 
 
