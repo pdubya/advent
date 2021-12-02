@@ -6,22 +6,12 @@ struct Readings
     fname
 end
 
-function Base.iterate(r::Readings, h)
-    u = readline(h)
-    parse(Int, u), eof(h) ? nothing : h
-end
-
-Base.iterate(r::Readings, ::Nothing) = nothing
-Base.length(r::Readings) = countlines(r.fname)
-
-function Base.iterate(r::Readings)
-    iterate(r, open(r.fname))
-end
-
-incs = let incs = 0
-    r = Stateful(Readings("input1.txt"))
-    b = CircularBuffer{typeof(incs)}(3)
-    append!(b, collect(take(r, 3)))
+function count_increases(u::Readings, n::Int)
+    @assert n > 0
+    incs = zero(n)
+    r = Stateful((parse(Int, s) for s in eachline(u.fname)))
+    b = CircularBuffer{Int}(n)
+    append!(b, collect(take(r, n)))
 
     c0 = c1 = sum(b)
     for v in r
@@ -30,7 +20,8 @@ incs = let incs = 0
         c0 = c1
         push!(b, v)
     end
-    println(incs)
     incs
 end
-println(incs)
+
+u = Readings("input1.txt")
+@time count_increases(u, 3)
