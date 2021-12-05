@@ -24,7 +24,6 @@ end
 
 function position(u::Commands)
     y, x, a = 0, 0, 0
-    updater = 
     for (dy, dx, da) in (strip_line(u, s) for s in eachline(u.fname))
         a += da
         y += dy + a*dx
